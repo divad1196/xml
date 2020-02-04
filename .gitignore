@@ -1,0 +1,8 @@
+
+*.exe
+*.o
+builds/*
+doc/doxy/latex/*
+nbproject
+obj
+.vscode
