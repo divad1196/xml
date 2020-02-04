@@ -1,7 +1,8 @@
 #include "node.h"
 #include <sstream>
 
-typedef std::pair<std::string, std::string> Attribute;
+typedef std::string Attribute;
+typedef std::pair<std::string, Attribute> KeyAttribute;
 
 InnerNode::InnerNode(std::string name): m_name(name), rcount(1) {
 
@@ -28,21 +29,20 @@ void Node::append(const Node& child) {
     m_node->m_children.push_back(child);
 }
 
-bool Node::hasAttribute(std::string attr) {
-    if (m_node->m_attributes.find(attr) != m_node->m_attributes.end()) return true;
-    return false;
+bool Node::hasAttribute(std::string attr) const {
+    return m_node->m_attributes.find(attr) != m_node->m_attributes.end();
 }
 
 
 void Node::setAttribute(std::string attr, std::string value) {
-    auto result = m_node->m_attributes.insert(Attribute(attr, value));
+    auto result = m_node->m_attributes.insert(KeyAttribute(attr, value));
     if(result.second == false) {
         result.first->second = value;
     }
 }
 
 void Node::addAttribute(std::string attr, std::string value) {
-    m_node->m_attributes.insert(Attribute(attr, value));
+    m_node->m_attributes.insert(KeyAttribute(attr, value));
 }
 
 Node Node::copy() const{

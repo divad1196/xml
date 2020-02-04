@@ -5,7 +5,6 @@
 #include <string>
 #include <map>
 #include <list>
-#include <memory>
 
 class Node;
 
@@ -18,8 +17,6 @@ struct InnerNode {
     size_t rcount; // count of node having reference on it
 };
 
-typedef std::shared_ptr<Node> SharedNode;
-
 class Node {
     public:
         Node(std::string name);
@@ -31,7 +28,7 @@ class Node {
 
         void append(const Node& child);
 
-        bool hasAttribute(std::string attr);
+        bool hasAttribute(std::string attr) const;
         void setAttribute(std::string attr, std::string value=""); // set or replace existing value
         void addAttribute(std::string attr, std::string value=""); // Set if not exists
 
