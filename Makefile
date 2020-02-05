@@ -41,8 +41,11 @@ setup: build_dir obj_dir
 
 # TESTS
 
+attribute.o: setup $(SRC)/attribute.h $(SRC)/attribute.cpp
+	$(COMPILE) -c $(SRC)/attribute.cpp -o $(OBJ)/attribute.o
+
 node.o: setup $(SRC)/node.h $(SRC)/node.cpp
 	$(COMPILE) -c $(SRC)/node.cpp -o $(OBJ)/node.o
 
-test1: setup node.o $(TESTS)/test1.cpp
-	$(COMPILE) $(SRC)/node.h $(OBJ)/node.o $(TESTS)/test1.cpp -o $(BUILDS)/test1
+test1: setup attribute.o node.o $(TESTS)/test1.cpp
+	$(COMPILE) $(SRC)/attribute.h $(OBJ)/attribute.o $(SRC)/node.h $(OBJ)/node.o $(TESTS)/test1.cpp -o $(BUILDS)/test1
