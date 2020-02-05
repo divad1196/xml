@@ -30,6 +30,8 @@ class Node {
         std::ostream& render(std::ostream& stream) const;
         std::string render() const;
 
+        bool isChild(const Node& node) const;
+        bool isDirectChild(const Node& node) const;
         void append(const Node& child);
 
         bool hasAttribute(std::string attr) const;
@@ -39,6 +41,8 @@ class Node {
         Node copy() const;
         Node rcopy() const;
     private:
+        inline bool isSynchronized() const;
+        bool m_isChild(const Node& node) const;
         InnerNode* m_node;
 };
 

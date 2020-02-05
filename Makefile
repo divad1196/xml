@@ -20,7 +20,7 @@ all: compile_tests
 
 main: 
 
-compile_tests: test1
+compile_tests: test1 test2
 
 documentation:
 	mkdir -p doc && cd doc && mkdir -p doxy && doxygen Doxyfile && make -C doxy/latex && cp doxy/latex/refman.pdf doc.pdf
@@ -49,3 +49,6 @@ node.o: setup $(SRC)/node.h $(SRC)/node.cpp
 
 test1: setup attribute.o node.o $(TESTS)/test1.cpp
 	$(COMPILE) $(SRC)/attribute.h $(OBJ)/attribute.o $(SRC)/node.h $(OBJ)/node.o $(TESTS)/test1.cpp -o $(BUILDS)/test1
+
+test2: setup attribute.o node.o $(TESTS)/test2.cpp
+	$(COMPILE) $(SRC)/attribute.h $(OBJ)/attribute.o $(SRC)/node.h $(OBJ)/node.o $(TESTS)/test2.cpp -o $(BUILDS)/test2

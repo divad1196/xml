@@ -1,5 +1,7 @@
 #include "node.h"
 #include <sstream>
+#include <iostream>
+#include <stdexcept>
 
 //==================================================================================
 // Nodes
@@ -38,8 +40,31 @@ bool Node::isSyncWith(const Node& node) {
     return m_node == node.m_node;
 }
 
+inline bool Node::isSynchronized() const {
+    return m_node->rcount > 1;
+}
+bool Node::m_isChild(const Node& node) const {
+    for(const auto& child: m_node->m_children) {
+        if(child.m_node == node.m_node) return true;
+        if(child.m_isChild(node)) return true;
+    }
+    return false;
+}
+bool Node::isChild(const Node& node) const {
+    if(!node.isSynchronized()) return false;
+    return m_isChild(node);
+}
+
+bool Node::isDirectChild(const Node& node) const {
+    if(!node.isSynchronized()) return false;
+    for(const auto& child: m_node->m_children) {
+        if(child.m_node == node.m_node) return true;
+    }
+    return false;
+}
 
 void Node::append(const Node& child) {
+    if(child.isChild(*this)) throw std::runtime_error("Recursivity in Node hierarchy");
     m_node->m_children.push_back(child);
 }
 
