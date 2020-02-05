@@ -1,8 +1,45 @@
 #include "node.h"
 #include <sstream>
 
-typedef std::string Attribute;
-typedef std::pair<std::string, Attribute> KeyAttribute;
+//==================================================================================
+// Attributes
+
+
+
+InnerAttributeValue::InnerAttributeValue(std::string value): m_value(value), rcount(1) {
+
+}
+
+
+InnerAttributeValue::InnerAttributeValue(const InnerAttributeValue& inner): m_value(inner.m_value), rcount(1) {
+
+}
+
+
+AttributeValue::AttributeValue(std::string value): m_attribute(new InnerAttributeValue(value)) {
+
+}
+
+AttributeValue::AttributeValue(const AttributeValue& attr): m_attribute(attr.m_attribute){
+    ++(m_attribute->rcount);
+}
+
+AttributeValue::~AttributeValue() {
+    --(m_attribute->rcount);
+    if(m_attribute->rcount == 0) delete m_attribute;
+}
+
+void AttributeValue::setValue(std::string value) {
+    m_attribute->m_value = value;
+}
+
+
+std::string AttributeValue::getValue() const {
+    return m_attribute->m_value;
+}
+
+//==================================================================================
+// Nodes
 
 InnerNode::InnerNode(std::string name): m_name(name), rcount(1) {
 
@@ -16,6 +53,7 @@ InnerNode::InnerNode(const InnerNode& inner): m_name(inner.m_name), rcount(1) {
 Node::Node(std::string name): m_node(new InnerNode(name)) {
 
 }
+
 Node::Node(const Node& node): m_node(node.m_node){
     ++(m_node->rcount);
 }
@@ -33,16 +71,15 @@ bool Node::hasAttribute(std::string attr) const {
     return m_node->m_attributes.find(attr) != m_node->m_attributes.end();
 }
 
-
 void Node::setAttribute(std::string attr, std::string value) {
-    auto result = m_node->m_attributes.insert(KeyAttribute(attr, value));
+    auto result = m_node->m_attributes.insert(AttributeBind(attr, AttributeValue(value)));
     if(result.second == false) {
-        result.first->second = value;
+        result.first->second.setValue(value);
     }
 }
 
 void Node::addAttribute(std::string attr, std::string value) {
-    m_node->m_attributes.insert(KeyAttribute(attr, value));
+    m_node->m_attributes.insert(AttributeBind(attr, AttributeValue(value)));
 }
 
 Node Node::copy() const{
@@ -61,7 +98,7 @@ Node Node::rcopy() const{
 std::ostream& Node::render(std::ostream& stream) const{
     stream << '<' << m_node->m_name;
     for(const auto& [attr, value]: m_node->m_attributes) {
-        stream << ' ' << attr << "=\"" << value << '"';
+        stream << ' ' << attr << "=\"" << value.getValue() << '"';
     }
     stream << ">";
     for(const auto& node: m_node->m_children) {
