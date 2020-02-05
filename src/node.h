@@ -24,6 +24,8 @@ class Node {
         Node(std::string name);
         Node(const Node& node);
         ~Node();
+        void syncWith(const Node& node);
+        bool isSyncWith(const Node& node);
 
         std::ostream& render(std::ostream& stream) const;
         std::string render() const;

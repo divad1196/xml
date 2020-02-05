@@ -26,6 +26,19 @@ Node::~Node() {
     if(m_node->rcount == 0) delete m_node;
 }
 
+
+void Node::syncWith(const Node& node) {
+    --(m_node->rcount);
+    if(m_node->rcount == 0) delete m_node;
+    m_node = node.m_node;
+    ++(m_node->rcount);
+}
+
+bool Node::isSyncWith(const Node& node) {
+    return m_node == node.m_node;
+}
+
+
 void Node::append(const Node& child) {
     m_node->m_children.push_back(child);
 }

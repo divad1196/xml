@@ -20,6 +20,10 @@ class AttributeValue {
         AttributeValue(std::string value);
         AttributeValue(const AttributeValue& attr);
         ~AttributeValue();
+        void syncWith(const AttributeValue& attr);
+        bool isSyncWith(const AttributeValue& attr);
+
+
         void setValue(std::string value);
         std::string getValue() const;
     private:
