@@ -1,7 +1,8 @@
 
 *.exe
 *.o
-builds/*
+builds/
+bin/
 doc/doxy/latex/*
 nbproject
 obj
